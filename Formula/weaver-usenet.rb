@@ -1,4 +1,4 @@
-class Weaver < Formula
+class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
   version "0.1.29"

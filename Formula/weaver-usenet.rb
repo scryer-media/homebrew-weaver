@@ -44,6 +44,13 @@ class WeaverUsenet < Formula
     end
   end
 
+  service do
+    run [opt_bin/"weaver", "--config", var/"weaver", "serve"]
+    keep_alive true
+    log_path var/"log/weaver.log"
+    error_log_path var/"log/weaver.log"
+  end
+
   test do
     assert_match "weaver", shell_output("#{bin}/weaver --version")
   end

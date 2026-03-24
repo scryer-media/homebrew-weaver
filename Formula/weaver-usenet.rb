@@ -7,7 +7,7 @@ class WeaverUsenet < Formula
   on_macos do
     on_arm do
       url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.1.43/weaver-darwin-arm64.tar.gz"
-      sha256 "4d22f5d53a1d72705a6576e2a41e24bb3010d81fe5371ad03e11630f5cdd97e9"
+      sha256 "887e289320b9bc1c03c3bc326407cf5eaeed90bcdc9e90ba31bb532531b8c295"
 
       def install
         bin.install "weaver"
@@ -16,7 +16,7 @@ class WeaverUsenet < Formula
 
     on_intel do
       url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.1.43/weaver-darwin-x86_64.tar.gz"
-      sha256 "b1d350dc2895b6874106b27b1dccd85a9ccec812c4acfe1dd7d95482e590facd"
+      sha256 "c317327132dc0c4aa7f259a5071c9b0de5afe6992e2d41aeb46e4364ccea03cb"
 
       def install
         bin.install "weaver"
@@ -27,7 +27,7 @@ class WeaverUsenet < Formula
   on_linux do
     on_arm do
       url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.1.43/weaver-linux-arm64.tar.gz"
-      sha256 "a21a28d72d758a593986d7398a9983ddf2dcc6397ec29ec3296857c993e3eb23"
+      sha256 "48280749d3e3cdc95a5d37926ffdd974c6c1152955d8f63f910bfcaeef9c398e"
 
       def install
         bin.install "weaver"
@@ -36,7 +36,7 @@ class WeaverUsenet < Formula
 
     on_intel do
       url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.1.43/weaver-linux-x86_64.tar.gz"
-      sha256 "e90956c73f37448b1816cf7751cd552b33aba1a792648346183fb9bdcce2cfa4"
+      sha256 "2ea791648567d2d91132a185aad09a089b9d77ba9bb2cc0e9fd68e52ea33cc82"
 
       def install
         bin.install "weaver"

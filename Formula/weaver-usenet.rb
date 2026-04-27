@@ -1,13 +1,13 @@
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.2.9"
+  version "0.3.0"
   license "MIT"
 
   on_macos do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.2.9/weaver-darwin-arm64.tar.gz"
-      sha256 "a0dd40f7a79b9926390ee3c5e85ba9742566dbc15f0563ab28796c7fb53435c8"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.3.0/weaver-darwin-arm64.tar.gz"
+      sha256 "74db44c322e74a66945166b9fe2c0a97c15bb9430d8fec3aa843ff68ffdbe06e"
 
       def install
         bin.install "weaver"
@@ -15,8 +15,8 @@ class WeaverUsenet < Formula
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.2.9/weaver-darwin-x86_64.tar.gz"
-      sha256 "c821c6b4f4e3d7a58636c70f7fcaa3e664e4c4f0f1f1b92e828da6634ff16a42"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.3.0/weaver-darwin-x86_64.tar.gz"
+      sha256 "6168e42269afbe98438665a358a1003820067db0ddce561d629096d8ac6a566f"
 
       def install
         bin.install "weaver"
@@ -26,8 +26,8 @@ class WeaverUsenet < Formula
 
   on_linux do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.2.9/weaver-linux-arm64.tar.gz"
-      sha256 "69d6bd43af2368be3f296f89c55a895d623c190d40cfe6a034d29348b1a558a9"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.3.0/weaver-linux-arm64.tar.gz"
+      sha256 "74cb15e164fed7bdf1e6008ababfbc4463929a7642ae1d1a0f6ebadad119fee9"
 
       def install
         bin.install "weaver"
@@ -35,8 +35,8 @@ class WeaverUsenet < Formula
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.2.9/weaver-linux-x86_64.tar.gz"
-      sha256 "ca67cc3729031047a72cb93f89ae2b5674ae70ce8147f36ab4101fca4b5c3d4d"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.3.0/weaver-linux-x86_64.tar.gz"
+      sha256 "b918f42cf9bba36cd55e016462bfe186330517dfef6225df6bd78f9c704a6f67"
 
       def install
         bin.install "weaver"

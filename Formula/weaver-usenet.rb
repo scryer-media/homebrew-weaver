@@ -1,7 +1,7 @@
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.4.2"
+  version "0.4.5"
   license "MIT"
 
   def install_support_files
@@ -16,17 +16,17 @@ class WeaverUsenet < Formula
       #!/bin/sh
       CONFIG_FILE="#{etc}/weaver/config.env"
 
-      if [ -f "$CONFIG_FILE" ]; then
+      if [ -f "" ]; then
         set -a
-        . "$CONFIG_FILE"
+        . ""
         set +a
       fi
 
-      : "${WEAVER_CONFIG:=#{var}/weaver}"
-      : "${WEAVER_PORT:=9090}"
-      : "${WEAVER_BASE_URL:=/}"
+      : "#{var/weaver}"
+      : "9090"
+      : "/"
 
-      exec "#{opt_bin}/weaver" --config "$WEAVER_CONFIG" serve --port "$WEAVER_PORT" --base-url "$WEAVER_BASE_URL" "$@"
+      exec "#{opt_bin}/weaver" --config "#{var" serve --port "9090" --base-url "/" ""
     SH
 
     chmod 0755, libexec/"weaver-service"
@@ -34,25 +34,29 @@ class WeaverUsenet < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.2/weaver-darwin-arm64.tar.gz"
-      sha256 "7c6cc5a052d16656f5918e771ccd261c0dbaba8a2651838ea83418a4631bab1c"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-darwin-arm64.tar.gz"
+      sha256 "f4a38f4f1dcd3a90fe5f75933d8cad04145def87a53dbd1f919a98e8fbd5db46"
+
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.2/weaver-darwin-x86_64.tar.gz"
-      sha256 "62083fcbacde818fee9a805515d9bfe632306bf42ed8f62888965e66103a30d1"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-darwin-x86_64.tar.gz"
+      sha256 "3bf110fed2354d16b7ee82c3078e2d006f2dfb045e10b3eaba7371947ada3229"
+
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.2/weaver-linux-arm64.tar.gz"
-      sha256 "064601f85fea8b3c2edd91c2ecc58fb3eb471c2217971ebe660c00678553197d"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-linux-arm64.tar.gz"
+      sha256 "9fef1f69812516b25aeff2062be055f95be1bb1955fe1cc9b69c7a650f4824d7"
+
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.2/weaver-linux-x86_64.tar.gz"
-      sha256 "a36bd5888c2cb0bbe2533b7c1f6e20fa32300891a0dea1ed29a8e80f5971aa3d"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-linux-x86_64.tar.gz"
+      sha256 "f7843cc4d09d50680c57028d7b0decfc436cf39ac5831290763d15011df27c7d"
+
     end
   end
 
@@ -63,13 +67,13 @@ class WeaverUsenet < Formula
     config_dir = etc/"weaver"
     config_dir.mkpath
     config_file = config_dir/"config.env"
-    return if config_file.exist?
-
-    config_file.write <<~EOS
-      WEAVER_CONFIG=#{var}/weaver
-      WEAVER_PORT=9090
-      WEAVER_BASE_URL=/
-    EOS
+    unless config_file.exist?
+      config_file.write <<~EOS
+        WEAVER_CONFIG=#{var}/weaver
+        WEAVER_PORT=9090
+        WEAVER_BASE_URL=/
+      EOS
+    end
   end
 
   def caveats

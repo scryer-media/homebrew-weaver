@@ -1,7 +1,7 @@
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.4.5"
+  version "0.4.6"
   license "MIT"
 
   def install_support_files
@@ -34,28 +34,28 @@ class WeaverUsenet < Formula
 
   on_macos do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-darwin-arm64.tar.gz"
-      sha256 "f4a38f4f1dcd3a90fe5f75933d8cad04145def87a53dbd1f919a98e8fbd5db46"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.6/weaver-darwin-arm64.tar.gz"
+      sha256 "b36311a0a57c29eaa3ae4b63c71456fca65aad04919577318de3b3a6094bf9d2"
 
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-darwin-x86_64.tar.gz"
-      sha256 "3bf110fed2354d16b7ee82c3078e2d006f2dfb045e10b3eaba7371947ada3229"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.6/weaver-darwin-x86_64.tar.gz"
+      sha256 "ca832e7980b7558e12d9683df679248e26a2d741ba29d2cf42d7c0b012ee3c54"
 
     end
   end
 
   on_linux do
     on_arm do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-linux-arm64.tar.gz"
-      sha256 "9fef1f69812516b25aeff2062be055f95be1bb1955fe1cc9b69c7a650f4824d7"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.6/weaver-linux-arm64.tar.gz"
+      sha256 "e9ffb07d3243e69d0a2cc3c4598df4deb060c6e69d61febc9ff39808ba615357"
 
     end
 
     on_intel do
-      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.5/weaver-linux-x86_64.tar.gz"
-      sha256 "f7843cc4d09d50680c57028d7b0decfc436cf39ac5831290763d15011df27c7d"
+      url "https://github.com/scryer-media/weaver/releases/download/weaver-v0.4.6/weaver-linux-x86_64.tar.gz"
+      sha256 "1b9dc743a3391c3058bd64a3c5f98956eb3e0afd09da71f250961f73877671d2"
 
     end
   end

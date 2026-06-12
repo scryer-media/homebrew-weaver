@@ -234,19 +234,19 @@ end
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.5.0"
+  version "0.5.2"
   license "MIT"
   RELEASE_REPO = "scryer-media/weaver"
-  RELEASE_VERSION = "0.5.0"
+  RELEASE_VERSION = "0.5.2"
   CHECKSUMS = {
-    "weaver-linux-x86_64-portable.tar.gz" => "05644f47ea122f27445a07aa9e70501f56c62fb3fadaf92555d9453488f6f8a5",
-    "weaver-linux-x86_64-haswell.tar.gz" => "cf4107a71f3e69b8318ddf754d0f922f67d51f70ed124c361b15dd193d2f0b22",
-    "weaver-linux-arm64-portable.tar.gz" => "69b5885a7de0e1b5a793a2ff0f855e6ce65bbc9b2f5ad516eb7c3087d49a444e",
-    "weaver-linux-arm64-cortex-a76.tar.gz" => "643ccf7b6ce90a42265f254a8d7e5fd0c40959e4849cd9f90db22b13b054d694",
-    "weaver-darwin-x86_64-portable.tar.gz" => "402b0788029c8e4d424c64e7ff54b14c7206f2e4c3a72dae4b72e677e7f17fb4",
-    "weaver-darwin-x86_64-haswell.tar.gz" => "5b5ebbc8a5f31649d6c6215461295722a185faf8b8fa9b345b59bf4037f3035d",
-    "weaver-darwin-arm64-portable.tar.gz" => "a18c932326a806d3ff8624f1936fb2d4860bd88543818347a5e4838a61dcb754",
-    "weaver-darwin-arm64-apple-m1.tar.gz" => "e088478616178427caf2e302b4766aec5cebee2859a2fed86b8d2f404e585a16",
+    "weaver-linux-x86_64-portable.tar.gz" => "3e104988bebac0e9098f90534c14a0cdbd566f6dbb3a52409224abacca13b71c",
+    "weaver-linux-x86_64-haswell.tar.gz" => "d3710e50b79dc98bf5256842a4f84998b60c8ba336234d466e93d4e79a647d4c",
+    "weaver-linux-arm64-portable.tar.gz" => "c449f0077eefa7500ae5ffb747cee43e9e133d4ef52f780da61a9cf3c824c06c",
+    "weaver-linux-arm64-cortex-a76.tar.gz" => "eb91452f63adc0ff1134d0137cdc60a0829f73da4cb00dfef3f0ad8fc2f7ea2d",
+    "weaver-darwin-x86_64-portable.tar.gz" => "f487a69d14800714a71ddad6b4d94fd796262c524b465a513edb91447919a705",
+    "weaver-darwin-x86_64-haswell.tar.gz" => "96f7b262658072c7e7e6ee191db922bf7af910886d6fcfee49d08cd5ea16f9b0",
+    "weaver-darwin-arm64-portable.tar.gz" => "a1b6280212e4915558696d526f3ff7316286672e83de005eaf039f37e6cbbd26",
+    "weaver-darwin-arm64-apple-m1.tar.gz" => "c6692d10fe6cf86874c9893490077e5451d6033cb4af80a9a18118241720d2c1",
   }.freeze
   SELECTED_OS = WeaverUsenetReleaseSelection.current_os
   SELECTED_ARCH = WeaverUsenetReleaseSelection.current_arch

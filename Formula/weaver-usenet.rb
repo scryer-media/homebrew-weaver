@@ -77,7 +77,10 @@ sysctl_values["machdep.cpu.features"],
 sysctl_values["machdep.cpu.leaf7_features"],
         ),
       )
-      normalized.superset?(X86_HASWELL_FEATURES.to_set) ? "haswell" : "portable"
+      unless normalized.superset?(X86_HASWELL_FEATURES.to_set)
+        raise "macOS x86_64 release requires Haswell CPU features; no portable macOS x86_64 artifact is published"
+      end
+      "haswell"
     when ["linux", "x86_64"]
       normalized = normalize_x86_features(cpuinfo_feature_tokens(linux_cpuinfo))
       normalized.superset?(X86_HASWELL_FEATURES.to_set) ? "haswell" : "portable"
@@ -108,7 +111,6 @@ sysctl_values["machdep.cpu.leaf7_features"],
     when ["linux", "x86_64", "haswell"] then "weaver-linux-x86_64-haswell.tar.gz"
     when ["linux", "arm64", "portable"] then "weaver-linux-arm64-portable.tar.gz"
     when ["linux", "arm64", "cortex-a76"] then "weaver-linux-arm64-cortex-a76.tar.gz"
-    when ["macos", "x86_64", "portable"] then "weaver-darwin-x86_64-portable.tar.gz"
     when ["macos", "x86_64", "haswell"] then "weaver-darwin-x86_64-haswell.tar.gz"
     when ["macos", "arm64", "portable"] then "weaver-darwin-arm64-portable.tar.gz"
     when ["macos", "arm64", "apple-m1"] then "weaver-darwin-arm64-apple-m1.tar.gz"
@@ -234,19 +236,18 @@ end
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.6.9"
+  version "0.7.0"
   license "MIT"
   RELEASE_REPO = "scryer-media/weaver"
-  RELEASE_VERSION = "0.6.9"
+  RELEASE_VERSION = "0.7.0"
   CHECKSUMS = {
-    "weaver-linux-x86_64-portable.tar.gz" => "44317cf26b8176f9bac8451b5387c0e6d5d6d19efbba075c929621ab4c0319b8",
-    "weaver-linux-x86_64-haswell.tar.gz" => "b305469d486e5aa4b8bcd00d573888a1a72e6d460c2f968b798de08591bd5f0e",
-    "weaver-linux-arm64-portable.tar.gz" => "b45e6247858b93a86c984ba0d0df8a10e7863970bd2895116fccf54ab4b3c182",
-    "weaver-linux-arm64-cortex-a76.tar.gz" => "d389d4c1f9f9c31e1c35e121515c0d9c86688ae6027f311c67cfee75660f0cf6",
-    "weaver-darwin-x86_64-portable.tar.gz" => "86964541d8ce107204348ed88fea0a4c88e073d80937c6253364ca5f18b46e87",
-    "weaver-darwin-x86_64-haswell.tar.gz" => "9fea7787a7edcccdc78233cab429ddf40f9c3a315c150d3a287080e8b49051be",
-    "weaver-darwin-arm64-portable.tar.gz" => "5eb23424eaac3c7852d0cee77c30d2c368fc08a058accf8493f145392ed001b8",
-    "weaver-darwin-arm64-apple-m1.tar.gz" => "955684cf01cfe1f2f105d92a35ec3a705d58cc1481f80d6d763cfcaa24baac2e",
+    "weaver-linux-x86_64-portable.tar.gz" => "8ec70da9ee90d1f3dc4efca78e3fae87a32a9d2c4e3e9eb5819cf7194f5940f4",
+    "weaver-linux-x86_64-haswell.tar.gz" => "3f7f11cf66afcee7b348250f09b65186a7b0b020911539f26dd9f4e1c3d34f25",
+    "weaver-linux-arm64-portable.tar.gz" => "47451ac883236680905b65474790e0b4085d207501386249fa8a5367a3c08600",
+    "weaver-linux-arm64-cortex-a76.tar.gz" => "3bb04928024d25bb7b26fefb99eb80bdcc7dbc81382f0b08b9dd4309a0d26ebd",
+    "weaver-darwin-x86_64-haswell.tar.gz" => "32a35f085ccb4a3d02cebdaf173e0830b691d88658a8d46b4e846ac7ed99be19",
+    "weaver-darwin-arm64-portable.tar.gz" => "7538c6e6525bcacd555c5fe55d20a9c3b04f00b437f3cffc0c27076d8de86c1a",
+    "weaver-darwin-arm64-apple-m1.tar.gz" => "ca7b10767d4b254a2fc1383b55a3415b62afa542b64af957ed1cf95d0d6b9bc0",
   }.freeze
   SELECTED_OS = WeaverUsenetReleaseSelection.current_os
   SELECTED_ARCH = WeaverUsenetReleaseSelection.current_arch

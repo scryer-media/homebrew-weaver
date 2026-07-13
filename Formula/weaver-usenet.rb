@@ -236,18 +236,18 @@ end
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.7.2"
+  version "0.7.3"
   license "MIT"
   RELEASE_REPO = "scryer-media/weaver"
-  RELEASE_VERSION = "0.7.2"
+  RELEASE_VERSION = "0.7.3"
   CHECKSUMS = {
-    "weaver-linux-x86_64-portable.tar.gz" => "0ff1a91a96255bf4dce627bd8ada1b6681be9ef456cefff1e9bd804e9048caba",
-    "weaver-linux-x86_64-haswell.tar.gz" => "b1d3afe318655eb1f7d5dc48c7c5563ac3c31ae3e8f9ef7808333832041a010e",
-    "weaver-linux-arm64-portable.tar.gz" => "05f5058e1f07943ec213181bfb5ff1a18e732224df578449304ab8fdca33d574",
-    "weaver-linux-arm64-cortex-a76.tar.gz" => "3fb729395393e66a6b1cf82c69bfae02fdf542816433f422ebff03323ecaa469",
-    "weaver-darwin-x86_64-haswell.tar.gz" => "c9da49bef58785bcaed222a7456319e7f2224379932bbc4c4385eab07d1bc9e4",
-    "weaver-darwin-arm64-portable.tar.gz" => "766e086f4f8fc9ff1de1b889faa9ce079b426458e545f3a25b1262e28327a765",
-    "weaver-darwin-arm64-apple-m1.tar.gz" => "e7c792d300d6cac7812feb6e6b6159ef40efe6d951461b0beb1619f89620d9a8",
+    "weaver-linux-x86_64-portable.tar.gz" => "37334294ab57d744e32e442244096954cd1a0197427125d605f4418bd39deacf",
+    "weaver-linux-x86_64-haswell.tar.gz" => "175a599a9fca0cff448de9fe87e10d5bcba93d079ef6c5b073cca5e658b36132",
+    "weaver-linux-arm64-portable.tar.gz" => "7a1cd7bff9d659e328763d634a5ce57bde7fd9a1137c9fe6776202cb9df610b3",
+    "weaver-linux-arm64-cortex-a76.tar.gz" => "9701071b148e4a5cbe59a0701ca9182c96ad9be3e32cd96feaded417c8f5fb8b",
+    "weaver-darwin-x86_64-haswell.tar.gz" => "02afd0549a72bc1d31f1c7cd22fe83821ee1addaecf890d3e234ffc954c066f6",
+    "weaver-darwin-arm64-portable.tar.gz" => "16a691f9cee5cc4ea8428a10e2d81296ee9ec79cbdf14ce1518b32dcdca9360b",
+    "weaver-darwin-arm64-apple-m1.tar.gz" => "f3a66149f1fadfe967104ca40d33d9e4a82a3757693bd596ed6202f236fa98c8",
   }.freeze
   SELECTED_OS = WeaverUsenetReleaseSelection.current_os
   SELECTED_ARCH = WeaverUsenetReleaseSelection.current_arch

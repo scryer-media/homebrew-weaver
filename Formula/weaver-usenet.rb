@@ -1,48 +1,6 @@
-require "open3"
 require "rbconfig"
-require "set"
 
 module WeaverUsenetReleaseSelection
-  X86_HASWELL_FEATURES = %w[
-    avx
-    avx2
-    bmi1
-    bmi2
-    f16c
-    fma
-    lzcnt
-    movbe
-    pclmulqdq
-    popcnt
-    rdrand
-    sse3
-    sse4.1
-    sse4.2
-    ssse3
-    xsave
-    xsaveopt
-  ].freeze
-
-  LINUX_ARM64_CORTEX_A76_FEATURES = %w[
-    aes
-    crc32
-    dotprod
-    fp16
-    lse
-    neon
-    rdm
-    sha2
-  ].freeze
-
-  MACOS_ARM64_APPLE_M1_FEATURES = %w[
-    aes
-    dotprod
-    fp16
-    lse
-    neon
-    sha2
-  ].freeze
-
   def self.current_os
     host_os = RbConfig::CONFIG["host_os"].to_s.downcase
     return "macos" if host_os.include?("darwin")
@@ -59,211 +17,52 @@ module WeaverUsenetReleaseSelection
     "unknown"
   end
 
-  def self.current_lane
-    detect_lane(
-      os: current_os,
-      arch: current_arch,
-      linux_cpuinfo: current_os == "linux" ? read_linux_cpuinfo : nil,
-      sysctl_values: current_os == "macos" ? read_macos_sysctl_values(current_arch) : {},
-    )
-  end
-
-  def self.detect_lane(os:, arch:, linux_cpuinfo: nil, sysctl_values: {})
+  def self.asset_name(os:, arch:)
     case [os, arch]
-    when ["macos", "x86_64"]
-      normalized = normalize_x86_features(
-        sysctl_feature_tokens(
-sysctl_values["machdep.cpu.features"],
-sysctl_values["machdep.cpu.leaf7_features"],
-        ),
-      )
-      unless normalized.superset?(X86_HASWELL_FEATURES.to_set)
-        raise "macOS x86_64 release requires Haswell CPU features; no portable macOS x86_64 artifact is published"
-      end
-      "haswell"
-    when ["linux", "x86_64"]
-      normalized = normalize_x86_features(cpuinfo_feature_tokens(linux_cpuinfo))
-      normalized.superset?(X86_HASWELL_FEATURES.to_set) ? "haswell" : "portable"
-    when ["macos", "arm64"]
-      required = {
-        "aes" => "hw.optional.arm.FEAT_AES",
-        "dotprod" => "hw.optional.arm.FEAT_DotProd",
-        "fp16" => "hw.optional.arm.FEAT_FP16",
-        "lse" => "hw.optional.arm.FEAT_LSE",
-        "neon" => "hw.optional.arm.AdvSIMD",
-        "sha2" => "hw.optional.arm.FEAT_SHA256",
-      }
-      present = required.all? do |_feature, key|
-        truthy_sysctl?(sysctl_values[key])
-      end
-      present ? "apple-m1" : "portable"
-    when ["linux", "arm64"]
-      normalized = normalize_linux_arm64_features(cpuinfo_feature_tokens(linux_cpuinfo))
-      normalized.superset?(LINUX_ARM64_CORTEX_A76_FEATURES.to_set) ? "cortex-a76" : "portable"
+    when ["linux", "x86_64"] then "weaver-linux-x86_64-portable.tar.gz"
+    when ["linux", "arm64"] then "weaver-linux-arm64-portable.tar.gz"
+    when ["macos", "x86_64"] then "weaver-darwin-x86_64-portable.tar.gz"
+    when ["macos", "arm64"] then "weaver-darwin-arm64-portable.tar.gz"
     else
-      "portable"
+      raise "unsupported asset mapping: #{[os, arch].inspect}"
     end
   end
 
-  def self.asset_name(os:, arch:, lane:)
-    case [os, arch, lane]
-    when ["linux", "x86_64", "portable"] then "weaver-linux-x86_64-portable.tar.gz"
-    when ["linux", "x86_64", "haswell"] then "weaver-linux-x86_64-haswell.tar.gz"
-    when ["linux", "arm64", "portable"] then "weaver-linux-arm64-portable.tar.gz"
-    when ["linux", "arm64", "cortex-a76"] then "weaver-linux-arm64-cortex-a76.tar.gz"
-    when ["macos", "x86_64", "haswell"] then "weaver-darwin-x86_64-haswell.tar.gz"
-    when ["macos", "arm64", "portable"] then "weaver-darwin-arm64-portable.tar.gz"
-    when ["macos", "arm64", "apple-m1"] then "weaver-darwin-arm64-apple-m1.tar.gz"
-    else
-      raise "unsupported asset mapping: #{[os, arch, lane].inspect}"
-    end
+  def self.asset_url(repo:, version:, os:, arch:)
+    "https://github.com/#{repo}/releases/download/weaver-v#{version}/#{asset_name(os: os, arch: arch)}"
   end
 
-  def self.asset_url(repo:, version:, os:, arch:, lane:)
-    "https://github.com/#{repo}/releases/download/weaver-v#{version}/#{asset_name(os: os, arch: arch, lane: lane)}"
+  def self.asset_sha256(os:, arch:, checksums:)
+    checksums.fetch(asset_name(os: os, arch: arch))
   end
 
-  def self.asset_sha256(os:, arch:, lane:, checksums:)
-    checksums.fetch(asset_name(os: os, arch: arch, lane: lane))
-  end
-
-  def self.read_linux_cpuinfo
-    File.read("/proc/cpuinfo")
-  rescue StandardError
-    nil
-  end
-
-  def self.read_macos_sysctl_values(arch)
-    values = {}
-    if arch == "x86_64"
-      %w[
-        machdep.cpu.features
-        machdep.cpu.leaf7_features
-      ].each do |key|
-        values[key] = read_sysctl(key)
-      end
-    elsif arch == "arm64"
-      %w[
-        hw.optional.arm.FEAT_AES
-        hw.optional.arm.FEAT_DotProd
-        hw.optional.arm.FEAT_FP16
-        hw.optional.arm.FEAT_LSE
-        hw.optional.arm.AdvSIMD
-        hw.optional.arm.FEAT_SHA256
-      ].each do |key|
-        values[key] = read_sysctl(key)
-      end
-    end
-    values
-  end
-
-  def self.read_sysctl(name)
-    output, status = Open3.capture2("sysctl", "-n", name)
-    status.success? ? output.strip : nil
-  rescue StandardError
-    nil
-  end
-
-  def self.cpuinfo_feature_tokens(cpuinfo_text)
-    return [] if cpuinfo_text.to_s.empty?
-
-    cpuinfo_text.each_line.filter_map do |line|
-      match = line.match(/^\s*(flags|Features)\s*:\s*(.+)$/i)
-      next unless match
-
-      match[2].split(/\s+/)
-    end.flatten
-  end
-
-  def self.sysctl_feature_tokens(*values)
-    values.compact.flat_map { |value| value.split(/\s+/) }
-  end
-
-  def self.normalize_x86_features(tokens)
-    tokens.each_with_object(Set.new) do |token, features|
-      normalized = normalize_x86_feature(token)
-      features << normalized if normalized
-    end
-  end
-
-  def self.normalize_linux_arm64_features(tokens)
-    tokens.each_with_object(Set.new) do |token, features|
-      normalized = normalize_linux_arm64_feature(token)
-      features << normalized if normalized
-    end
-  end
-
-  def self.normalize_x86_feature(token)
-    case token.to_s.downcase
-    when "avx", "avx1.0" then "avx"
-    when "avx2", "avx2.0" then "avx2"
-    when "bmi1" then "bmi1"
-    when "bmi2" then "bmi2"
-    when "f16c" then "f16c"
-    when "fma" then "fma"
-    when "abm", "lzcnt" then "lzcnt"
-    when "movbe" then "movbe"
-    when "pclmul", "pclmulqdq" then "pclmulqdq"
-    when "popcnt" then "popcnt"
-    when "rdrand" then "rdrand"
-    when "sse3" then "sse3"
-    when "sse4_1", "sse4.1" then "sse4.1"
-    when "sse4_2", "sse4.2" then "sse4.2"
-    when "ssse3" then "ssse3"
-    when "osxsave", "xsave" then "xsave"
-    when "xsaveopt" then "xsaveopt"
-    end
-  end
-
-  def self.normalize_linux_arm64_feature(token)
-    case token.to_s.downcase
-    when "aes" then "aes"
-    when "crc", "crc32" then "crc32"
-    when "asimddp", "dotprod" then "dotprod"
-    when "fphp", "asimdhp", "fp16" then "fp16"
-    when "atomics", "lse" then "lse"
-    when "asimd", "neon" then "neon"
-    when "asimdrdm", "rdm" then "rdm"
-    when "sha2" then "sha2"
-    end
-  end
-
-  def self.truthy_sysctl?(value)
-    value.to_s.strip == "1"
-  end
 end
 
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.7.8"
+  version "0.9.3"
   license "MIT"
   RELEASE_REPO = "scryer-media/weaver"
-  RELEASE_VERSION = "0.7.8"
+  RELEASE_VERSION = "0.9.3"
   CHECKSUMS = {
-    "weaver-linux-x86_64-portable.tar.gz" => "5cf273393f669f6b25dd0b8f7629e6946feeee04fa6f4de54a6a1f6cc186b754",
-    "weaver-linux-x86_64-haswell.tar.gz" => "00ca3fae58b889af6fab59cf5e9a829bc712f64eae325b8c69c4f41e70de00fa",
-    "weaver-linux-arm64-portable.tar.gz" => "66b9e323e79e77611469fedc71fe94b65c2361e7eddb25de5eeb73424f4c24ea",
-    "weaver-linux-arm64-cortex-a76.tar.gz" => "4e2bf107d17f8f9adf209a1007f8274235ded9ff8b98f6a5e7204624ef6e8da1",
-    "weaver-darwin-x86_64-haswell.tar.gz" => "372cc6ec20d4e5d962e0acd74d04425a239a48d62924019aca53d54c8e2248bb",
-    "weaver-darwin-arm64-portable.tar.gz" => "736bc115af443bcd496f26c463bc12f4057ed65d9396993dd0bbd3cf42ef1e7d",
-    "weaver-darwin-arm64-apple-m1.tar.gz" => "48969b4dc0948b66b4bac801b941973c6f7d9b5baf230ac55186523269783660",
+    "weaver-linux-x86_64-portable.tar.gz" => "2db2453af08ef6e9546338b4d7f8030975453dbeee0367f053d622f4ffe0cf71",
+    "weaver-linux-arm64-portable.tar.gz" => "321ecea0cf80763a560fd2c2f5c58f4218069093bf6d2c68cde4c3c6184861ef",
+    "weaver-darwin-x86_64-portable.tar.gz" => "a21b60adde4e3836c26d107a6327ec6ab2945109f2215828874a80ce2c71943c",
+    "weaver-darwin-arm64-portable.tar.gz" => "82e0275c93a30c66f596923bd562d90c2ec92e2ea4cdd41457f5b4d7d0cf931e",
   }.freeze
   SELECTED_OS = WeaverUsenetReleaseSelection.current_os
   SELECTED_ARCH = WeaverUsenetReleaseSelection.current_arch
-  SELECTED_LANE = WeaverUsenetReleaseSelection.current_lane
 
   url WeaverUsenetReleaseSelection.asset_url(
     repo: RELEASE_REPO,
     version: RELEASE_VERSION,
     os: SELECTED_OS,
     arch: SELECTED_ARCH,
-    lane: SELECTED_LANE,
   )
   sha256 WeaverUsenetReleaseSelection.asset_sha256(
     os: SELECTED_OS,
     arch: SELECTED_ARCH,
-    lane: SELECTED_LANE,
     checksums: CHECKSUMS,
   )
 

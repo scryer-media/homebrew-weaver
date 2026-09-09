@@ -41,15 +41,15 @@ end
 class WeaverUsenet < Formula
   desc "Unified Usenet binary downloader, repair, and extraction engine"
   homepage "https://github.com/scryer-media/weaver"
-  version "0.11.4"
+  version "0.11.5"
   license "MIT"
   RELEASE_REPO = "scryer-media/weaver"
-  RELEASE_VERSION = "0.11.4"
+  RELEASE_VERSION = "0.11.5"
   CHECKSUMS = {
-    "weaver-linux-x86_64-portable.tar.gz" => "1ed35d18d87645ed52fe2ca47afdb11fd0bfb20ad8fb952c2143d2a06787296c",
-    "weaver-linux-arm64-portable.tar.gz" => "c9ecfa98e489666c380aac1597144f6358b4c702617ca69e338cc76282fff106",
-    "weaver-darwin-x86_64-portable.tar.gz" => "ed68cce0478795b9b085424be58b303d86b9d63d4aeaccbbf5c09dfd4eabae3c",
-    "weaver-darwin-arm64-portable.tar.gz" => "f13d23b6df390b5c193d314d31f873e7169595054c88994f077834b43a06aa33",
+    "weaver-linux-x86_64-portable.tar.gz" => "d144fd0d34d5406119d2bb1e6f967c7bca9f03539cb30a17a9741e6e451a43a2",
+    "weaver-linux-arm64-portable.tar.gz" => "355a3cd3803f38c9ca8fba9098e35cf85087718f3732ea4c93ff05e03ceea934",
+    "weaver-darwin-x86_64-portable.tar.gz" => "5b8955fbbdb847ff3630e008c8f4ae4c4fec4ae7c1f72d3e5f5176b6fc06b2eb",
+    "weaver-darwin-arm64-portable.tar.gz" => "4871beae178b63a46f2c9ff160000351f6d345e52222c0805da9f22b9609b8cc",
   }.freeze
   SELECTED_OS = WeaverUsenetReleaseSelection.current_os
   SELECTED_ARCH = WeaverUsenetReleaseSelection.current_arch
